@@ -125,3 +125,45 @@ print("Solution found:")
 print("Farmer, Goat, Wolf, Cabbage:", solution)
 
 
+
+
+
+def hanoi_bfs(num_disks):
+    initial_state = ([list(range(num_disks, 0, -1)), [], []])
+    goal_state = ([[], [], list(range(num_disks, 0, -1))])
+    queue = []
+    queue.append((initial_state, []))  # (state, path)
+    visited = set()
+    while queue:
+        current_state, current_path = queue.pop(0)
+        if current_state == goal_state:
+            return current_path
+
+        if tuple(map(tuple, current_state)) in visited:
+            continue
+
+        visited.add(tuple(map(tuple, current_state)))
+
+        for i in range(3):
+            for j in range(3):
+                if i != j and current_state[i]:
+                    new_state = [current_state[x][:] for x in range(3)]
+                    disk = new_state[i].pop()
+                    new_state[j].append(disk)
+                    queue.append((new_state, current_path + [(i, j)]))
+
+    return None
+
+def print_solution(solution):
+    if solution:
+        print("Solution path:")
+        for move in solution:
+            print(f"Move disk from peg {move[0]} to peg {move[1]}")
+    else:
+        print("No solution found")
+
+num_disks_list = [3]
+for num_disks in num_disks_list:
+    print(f"\nTower of Hanoi with {num_disks} disks:")
+    solution = hanoi_bfs(num_disks)
+    print_solution(solution)

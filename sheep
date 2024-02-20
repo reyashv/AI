@@ -1,0 +1,27 @@
+from collections import deque
+
+def is_valid(farmer, goat, wolf, cabbage):
+    if (goat == cabbage) and (goat != farmer):
+        return False
+    if (goat == wolf) and (goat != farmer):
+        return False
+    return True
+
+def bfs():
+    visited = set()
+    queue = deque([(0, 0, 0, 0)]) 
+    while queue:
+        current_state = queue.popleft()
+        farmer, goat, wolf, cabbage = current_state
+        if farmer == 1 and goat == 1 and wolf == 1 and cabbage == 1:
+            return current_state
+
+        visited.add(current_state)
+        for action in [(1, 0, 0, 0), (-1, 0, 0, 0), (1, 1, 0, 0), (-1, -1, 0, 0), (1, 0, 1, 0), (-1, 0, -1, 0), (1, 0, 0, 1), (-1, 0, 0, -1)]:
+            new_state = (farmer + action[0], goat + action[1], wolf + action[2], cabbage + action[3])
+            if is_valid(*new_state) and new_state not in visited:
+                queue.append(new_state)
+
+solution = bfs()
+print("Solution found:")
+print("Farmer, Goat, Wolf, Cabbage:", solution)

@@ -167,3 +167,40 @@ for num_disks in num_disks_list:
     print(f"\nTower of Hanoi with {num_disks} disks:")
     solution = hanoi_bfs(num_disks)
     print_solution(solution)
+
+
+
+
+from collections import deque
+
+def water_jug_bfs(jug1_capacity, jug2_capacity, jug3_capacity, target):
+    visited = set()
+    queue = deque([(0, 0, jug3_capacity)])  
+    while queue:
+        jug1, jug2, jug3 = queue.popleft()
+        if jug1 == target or jug2 == target or jug3 == target:
+            return True
+
+        if (jug1, jug2, jug3) in visited:
+            continue
+        visited.add((jug1, jug2, jug3))
+
+        queue.append(((jug1 + jug2) % jug1_capacity, min(jug1 + jug2, jug2_capacity), jug3))  
+        queue.append((min(jug1 + jug3, jug1_capacity), jug2, (jug1 + jug3) % jug3_capacity))  
+        queue.append((jug1, (jug2 + jug3) % jug2_capacity, min(jug2 + jug3, jug3_capacity)))  
+        queue.append(((jug1 + jug2) % jug1_capacity, jug2, (jug1 + jug2 + jug3) % jug3_capacity))  
+
+        queue.append((0, jug2, jug3))  
+        queue.append((jug1, 0, jug3)) 
+        queue.append((jug1, jug2, 0)) 
+    return False
+
+jug1_capacity = 8
+jug2_capacity = 5
+jug3_capacity = 3
+target = 4
+
+if water_jug_bfs(jug1_capacity, jug2_capacity, jug3_capacity, target):
+    print(f'{target} liters of water can be measured using {jug1_capacity}-liter, {jug2_capacity}-liter, and {jug3_capacity}-liter jugs')
+else:
+    print(f'{target} liters of water cannot be measured using {jug1_capacity}-liter, {jug2_capacity}-liter, and {jug3_capacity}-liter jugs')

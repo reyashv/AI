@@ -1,7 +1,6 @@
 //hmm
 h = {"a":0.2,"c":0.3,"g":0.3,"t":0.2,"h":0.5,"l":0.5}
 l = {"a":0.3,"c":0.2,"g":0.2,"t":0.3,"l":0.6,"h":0.4}
-
 startH = 0.5
 startL = 0.5
 
@@ -20,9 +19,7 @@ for i,j in zip(lp, hp):
     if i>=j:
         print("L", end=' ')
     else:
-        print("H", end=' ')
-        
-        
+        print("H", end=' ')   
 h = {"a":-2.322,"c":-1.737,"g":-1.737,"t":-2.322,"h":-1,"l":-1}
 l = {"a":-1.737,"c":-2.322,"g":-2.322,"t":-1.737,"l":-0.737,"h":-1.322}
 
@@ -38,24 +35,43 @@ for char in pattern[1:]:
     hp.append(ha)
     lp.append(la)
 print(hp, "\n", lp)
-
 for i,j in zip(hp, lp):
     if i>j:
         print("H", end = " ")
     else:
         print("L", end = " ")
 
+---------------------------------------------------------------------------
+//forward algo
+def forward_algorithm(sequence, states, start_prob, transition_prob, emission_prob):
+    forwardprob = [{state: start_prob[state] * emission_prob[state][sequence[0]] for state in states}]
+    for char in sequence[1:]:
+        new_forward_probs = {}
+        for state_to in states:
+            prob = sum(forwardprob[-1][state_from] * transition_prob[state_from][state_to] * emission_prob[state_to][char] for state_from in states)
+            new_forward_probs[state_to] = prob
+        forwardprob.append(new_forward_probs)
+    probability = sum(forwardprob[-1].values())
+    return forwardprob, probability
+sequence = "ggcactgaa"
+states = ['H', 'L']
+start_prob = {'H': 0.5, 'L': 0.5}
+transition_prob = {'H': {'H': 0.5, 'L': 0.5}, 'L': {'H': 0.4, 'L': 0.6}}
+emission_prob = {
+    'H': {'a': 0.2, 'c': 0.3, 'g': 0.3, 't': 0.2, 'h': 0.5, 'l': 0.5},
+    'L': {'a': 0.3, 'c': 0.2, 'g': 0.2, 't': 0.3, 'h': 0.4, 'l': 0.6}
+}
+forwardprob, probability = forward_algorithm(sequence, states, start_prob, transition_prob, emission_prob)
+print("Forward probabilities:", forwardprob)
+print("Probability of observing the sequence:", probability)
 
+--------------------------------------------------------------------------
 //mdp
 import math
-
 transition={'sun':{'a':{'wind': 0.5, 'sun': 0.5}},
          'wind':{'a':{'hail': 0.5, 'sun': 0.5}},
          'hail':{'a':{'hail': 0.5, 'wind': 0.5}}}
-
 rewards={'sun': 4, 'wind': 0, 'hail': -8}
-
-
 '''transition={'pu':{'s':{'pu': 1}, 'a':{'pu': 0.5, 'pf':0.5}},
             'pf':{'s':{'rf':0.5, 'pu':0.5}, 'a':{'pf': 1}},
             'rf':{'s':{'rf':0.5, 'ru':0.5}, 'a':{'pf': 1}},
@@ -65,7 +81,6 @@ rewards={'pu':0, 'pf':0, 'ru':10, 'rf':10}
 '''
 newrewards={}
 df=0.9
-
 for j in range(5):
     for i in transition.keys():
         m=-math.inf

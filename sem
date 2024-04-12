@@ -1,4 +1,4 @@
-//hmm
+#hmm
 h = {"a":0.2,"c":0.3,"g":0.3,"t":0.2,"h":0.5,"l":0.5}
 l = {"a":0.3,"c":0.2,"g":0.2,"t":0.3,"l":0.6,"h":0.4}
 startH = 0.5
@@ -41,8 +41,7 @@ for i,j in zip(hp, lp):
     else:
         print("L", end = " ")
 
----------------------------------------------------------------------------
-//forward algo
+#forward algo
 def forward_algorithm(sequence, states, start_prob, transition_prob, emission_prob):
     forwardprob = [{state: start_prob[state] * emission_prob[state][sequence[0]] for state in states}]
     for char in sequence[1:]:
@@ -65,8 +64,7 @@ forwardprob, probability = forward_algorithm(sequence, states, start_prob, trans
 print("Forward probabilities:", forwardprob)
 print("Probability of observing the sequence:", probability)
 
---------------------------------------------------------------------------
-//mdp
+#mdp
 import math
 transition={'sun':{'a':{'wind': 0.5, 'sun': 0.5}},
          'wind':{'a':{'hail': 0.5, 'sun': 0.5}},
